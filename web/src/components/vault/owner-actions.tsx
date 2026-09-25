@@ -41,7 +41,7 @@ export function OwnerActions({ allowance: a, now }: { allowance: Allowance; now:
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon-sm" aria-label="Allowance actions" disabled={busy}>
+          <Button variant="ghost" size="icon-sm" aria-label="Allowance actions">
             <EllipsisVerticalIcon />
           </Button>
         </DropdownMenuTrigger>
@@ -50,16 +50,16 @@ export function OwnerActions({ allowance: a, now }: { allowance: Allowance; now:
             <PencilIcon /> Edit
           </DropdownMenuItem>
           {a.paused ? (
-            <DropdownMenuItem onSelect={() => call("unpause", "Resume allowance")}>
+            <DropdownMenuItem disabled={busy} onSelect={() => call("unpause", "Resume allowance")}>
               <PlayIcon /> Resume
             </DropdownMenuItem>
           ) : (
-            <DropdownMenuItem onSelect={() => call("pause", "Pause allowance")}>
+            <DropdownMenuItem disabled={busy} onSelect={() => call("pause", "Pause allowance")}>
               <PauseIcon /> Pause
             </DropdownMenuItem>
           )}
           <DropdownMenuSeparator />
-          <DropdownMenuItem variant="destructive" onSelect={() => setRevoking(true)}>
+          <DropdownMenuItem variant="destructive" disabled={busy} onSelect={() => setRevoking(true)}>
             <BanIcon /> Revoke
           </DropdownMenuItem>
         </DropdownMenuContent>

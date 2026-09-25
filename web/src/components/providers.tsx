@@ -20,7 +20,7 @@ export function Providers({ children }: { children: ReactNode }) {
         <QueryClientProvider client={queryClient}>
           <TooltipProvider>
             {children}
-            <Toaster position="bottom-right" closeButton />
+            <Toaster position="bottom-right" closeButton mobileOffset={{ bottom: 80 }} />
           </TooltipProvider>
         </QueryClientProvider>
       </WagmiProvider>
