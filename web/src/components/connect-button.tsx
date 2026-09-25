@@ -1,9 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { CopyIcon, ExternalLinkIcon, LogOutIcon, WalletIcon } from "lucide-react";
+import {
+  ArrowLeftRightIcon,
+  CopyIcon,
+  ExternalLinkIcon,
+  LogOutIcon,
+  TriangleAlertIcon,
+  UsersIcon,
+  WalletIcon,
+} from "lucide-react";
 import { toast } from "sonner";
-import { useAccount, useConnect, useConnectors, useDisconnect, useSwitchChain } from "wagmi";
+import type { Address, EIP1193Provider } from "viem";
+import { type Connector, useAccount, useConnect, useConnectors, useDisconnect, useSwitchChain } from "wagmi";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -25,43 +34,90 @@ import { addressUrl, chain } from "@/lib/config";
 import { shortAddress } from "@/lib/format";
 
 export function ConnectButton() {
-  const { address, chainId, isConnected, isConnecting, isReconnecting } = useAccount();
-  const { disconnect } = useDisconnect();
-  const { switchChain, isPending: switching } = useSwitchChain();
+  const { address, chainId, connector, isConnected, isConnecting, isReconnecting } = useAccount();
   const [open, setOpen] = useState(false);
 
-  if (!isConnected || !address) {
-    return (
-      <>
+  return (
+    <>
+      {isConnected && address ? (
+        <AccountMenu
+          address={address}
+          wrongNetwork={chainId !== chain.id}
+          connector={connector}
+          onChangeWallet={() => setOpen(true)}
+        />
+      ) : (
         <Button onClick={() => setOpen(true)} disabled={isConnecting || isReconnecting}>
           <WalletIcon />
           {isConnecting || isReconnecting ? "Connecting…" : "Connect wallet"}
         </Button>
-        <WalletDialog open={open} onOpenChange={setOpen} />
-      </>
-    );
-  }
+      )}
+      <WalletDialog open={open} onOpenChange={setOpen} />
+    </>
+  );
+}
 
-  if (chainId !== chain.id) {
-    return (
-      <Button variant="destructive" disabled={switching} onClick={() => switchChain({ chainId: chain.id })}>
-        {switching ? "Switching…" : `Switch to ${chain.name}`}
-      </Button>
-    );
-  }
-
+function AccountMenu({
+  address,
+  wrongNetwork,
+  connector,
+  onChangeWallet,
+}: {
+  address: Address;
+  wrongNetwork: boolean;
+  connector: Connector | undefined;
+  onChangeWallet: () => void;
+}) {
+  const { disconnectAsync } = useDisconnect();
+  const { switchChain, isPending: switching } = useSwitchChain();
   const explorer = addressUrl(address);
+  const walletName = connector && connector.id !== "injected" ? connector.name : "Browser wallet";
+
+  // Opens the wallet's own account picker; wagmi follows the accountsChanged event it fires.
+  async function switchAccount() {
+    const provider = (await connector?.getProvider()) as EIP1193Provider | undefined;
+    if (!provider || !connector) return;
+    try {
+      await provider.request({ method: "wallet_requestPermissions", params: [{ eth_accounts: {} }] });
+      const [next] = await connector.getAccounts();
+      if (next && next.toLowerCase() !== address.toLowerCase()) toast.success(`Switched to ${shortAddress(next)}`);
+    } catch (e) {
+      if ((e as { code?: number }).code === 4001) return; // closed the picker
+      toast.info(`Pick another account in ${walletName}. Tap switches with it.`);
+    }
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="font-mono">
-          <span className="size-2 rounded-full bg-success" aria-hidden />
-          {shortAddress(address)}
-        </Button>
+        {wrongNetwork ? (
+          <Button variant="destructive">
+            <TriangleAlertIcon />
+            Wrong network
+          </Button>
+        ) : (
+          <Button variant="outline" className="font-mono">
+            <span className="size-2 rounded-full bg-success" aria-hidden />
+            {shortAddress(address)}
+          </Button>
+        )}
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel className="font-normal text-muted-foreground">Connected to {chain.name}</DropdownMenuLabel>
+      <DropdownMenuContent align="end" className="w-60">
+        <DropdownMenuLabel className="flex flex-col gap-0.5 font-normal">
+          <span className="font-mono text-foreground">{shortAddress(address)}</span>
+          <span className="text-xs text-muted-foreground">
+            {walletName} · {wrongNetwork ? "wrong network" : chain.name}
+          </span>
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        {wrongNetwork && (
+          <>
+            <DropdownMenuItem disabled={switching} onSelect={() => switchChain({ chainId: chain.id })}>
+              <ArrowLeftRightIcon /> {switching ? "Switching…" : `Switch to ${chain.name}`}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        )}
         <DropdownMenuItem
           onSelect={() => {
             navigator.clipboard.writeText(address);
@@ -78,7 +134,18 @@ export function ConnectButton() {
           </DropdownMenuItem>
         )}
         <DropdownMenuSeparator />
-        <DropdownMenuItem onSelect={() => disconnect()}>
+        <DropdownMenuItem onSelect={switchAccount}>
+          <UsersIcon /> Switch account
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onSelect={async () => {
+            await disconnectAsync();
+            onChangeWallet();
+          }}
+        >
+          <WalletIcon /> Change wallet
+        </DropdownMenuItem>
+        <DropdownMenuItem variant="destructive" onSelect={() => disconnectAsync()}>
           <LogOutIcon /> Disconnect
         </DropdownMenuItem>
       </DropdownMenuContent>
