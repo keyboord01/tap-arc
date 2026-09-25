@@ -12,15 +12,30 @@ export const ACCOUNTS = {
 export const TAP = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 export const USDC = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
+type WalletOptions = {
+  /** Accounts the wallet holds. The first is selected; wallet_requestPermissions selects the next one. */
+  accounts?: string[];
+};
+
 /**
  * Injects a minimal EIP-1193 wallet that forwards everything to anvil and
  * records each eth_sendTransaction so tests can check the fees offered.
+ * `window.__walletSetChain(id)` moves the wallet to another network.
  */
-export async function installWallet(page: Page, account: string) {
+export async function installWallet(page: Page, account: string, options: WalletOptions = {}) {
   await page.addInitScript(
-    ({ rpc, account }) => {
+    ({ rpc, accounts }) => {
       const sent: unknown[] = [];
       (window as unknown as { __sentTxs: unknown[] }).__sentTxs = sent;
+      const listeners: Record<string, ((...args: unknown[]) => void)[]> = {};
+      const emit = (event: string, value: unknown) => (listeners[event] ?? []).forEach((fn) => fn(value));
+      let selected = 0;
+      let chainOverride: string | undefined;
+      // Lets a test change network from "inside the wallet", as a user would.
+      (window as unknown as { __walletSetChain: (id: number) => void }).__walletSetChain = (id) => {
+        chainOverride = `0x${id.toString(16)}`;
+        emit("chainChanged", chainOverride);
+      };
       let id = 0;
       const forward = async (method: string, params: unknown) => {
         const res = await fetch(rpc, {
@@ -38,12 +53,25 @@ export async function installWallet(page: Page, account: string) {
           switch (method) {
             case "eth_requestAccounts":
             case "eth_accounts":
-              return [account];
+              return [accounts[selected]];
+            case "eth_chainId":
+              return chainOverride ?? forward(method, params);
             case "wallet_switchEthereumChain":
-            case "wallet_addEthereumChain":
+              if (chainOverride) {
+                chainOverride = undefined;
+                emit("chainChanged", await forward("eth_chainId", []));
+              }
               return null;
-            case "wallet_requestPermissions":
-              return [{ parentCapability: "eth_accounts" }];
+            case "wallet_addEthereumChain":
+            case "wallet_revokePermissions":
+              return null;
+            case "wallet_requestPermissions": {
+              // Stands in for the wallet's account picker: move to the next account.
+              const previous = selected;
+              selected = (selected + 1) % accounts.length;
+              if (selected !== previous) emit("accountsChanged", [accounts[selected]]);
+              return [{ parentCapability: "eth_accounts", caveats: [{ type: "restrictReturnedAccounts", value: [accounts[selected]] }] }];
+            }
             case "eth_sendTransaction":
               sent.push(params?.[0]);
               return forward(method, params);
@@ -51,11 +79,15 @@ export async function installWallet(page: Page, account: string) {
               return forward(method, params);
           }
         },
-        on() {},
-        removeListener() {},
+        on(event: string, fn: (...args: unknown[]) => void) {
+          (listeners[event] ??= []).push(fn);
+        },
+        removeListener(event: string, fn: (...args: unknown[]) => void) {
+          listeners[event] = (listeners[event] ?? []).filter((l) => l !== fn);
+        },
       };
     },
-    { rpc: RPC, account },
+    { rpc: RPC, accounts: options.accounts ?? [account] },
   );
 }
 
