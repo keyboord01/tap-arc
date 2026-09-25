@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { BanIcon, EllipsisVerticalIcon, PauseIcon, PencilIcon, PlayIcon } from "lucide-react";
+import { BanIcon, EllipsisVerticalIcon, LinkIcon, PauseIcon, PencilIcon, PlayIcon } from "lucide-react";
+import { toast } from "sonner";
 import type { Address } from "viem";
 
 import { AllowanceFormDialog } from "@/components/vault/allowance-form-dialog";
@@ -25,6 +26,7 @@ import { txStep, useTx } from "@/hooks/use-tx";
 import type { Allowance } from "@/lib/allowance";
 import { tapAddress } from "@/lib/config";
 import { shortAddress } from "@/lib/format";
+import { shareUrl } from "@/lib/share";
 import { tapAbi } from "@/lib/tap-abi";
 
 export function OwnerActions({ allowance: a, now }: { allowance: Allowance; now: number }) {
@@ -46,6 +48,16 @@ export function OwnerActions({ allowance: a, now }: { allowance: Allowance; now:
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
+          <DropdownMenuItem
+            onSelect={() => {
+              navigator.clipboard.writeText(shareUrl(a.id));
+              toast.success("Share link copied", {
+                description: `Send it to ${shortAddress(a.spender)}. It opens their view of this allowance.`,
+              });
+            }}
+          >
+            <LinkIcon /> Copy share link
+          </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => setEditing(true)}>
             <PencilIcon /> Edit
           </DropdownMenuItem>
