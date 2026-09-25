@@ -18,13 +18,13 @@ test("owner copies a share link that opens the spender's view", async ({ page, c
   const id = await allowanceCount();
 
   await installWallet(page, ACCOUNTS.owner);
-  await page.goto("/");
+  await page.goto("/app");
   await connect(page);
   await page.getByRole("button", { name: "Allowance actions" }).click();
   await page.getByRole("menuitem", { name: "Copy share link" }).click();
   await expect(page.getByText("Share link copied")).toBeVisible();
   const link = await page.evaluate(() => navigator.clipboard.readText());
-  expect(link).toMatch(new RegExp(`/a/${id}$`));
+  expect(link).toMatch(new RegExp(`/app/a/${id}$`));
 
   // The spender opens the link on their own device and spends from it directly.
   const spenderContext = await browser.newContext({ viewport: page.viewportSize() ?? undefined });
@@ -48,7 +48,7 @@ test("another wallet is told to switch to the spender", async ({ page }) => {
   await seedAllowance();
   const id = await allowanceCount();
   await installWallet(page, ACCOUNTS.recipient);
-  await page.goto(`/a/${id}`);
+  await page.goto(`/app/a/${id}`);
   await expect(page.getByText(/Connect 0x7099…79C8 to spend/)).toBeVisible();
   await connect(page);
   await expect(page.getByText(/this allowance is for 0x7099…79C8/)).toBeVisible();
@@ -56,6 +56,6 @@ test("another wallet is told to switch to the spender", async ({ page }) => {
 });
 
 test("an unknown id shows not found", async ({ page }) => {
-  await page.goto("/a/999");
+  await page.goto("/app/a/999");
   await expect(page.getByText("Allowance not found")).toBeVisible();
 });

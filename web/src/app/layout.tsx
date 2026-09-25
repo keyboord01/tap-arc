@@ -1,52 +1,42 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { headers } from "next/headers";
-import { cookieToInitialState } from "wagmi";
-
-import { NotConfigured } from "@/components/not-configured";
-import { Providers } from "@/components/providers";
-import { MobileNav, SiteHeader } from "@/components/site-header";
-import { chain, tapAddress } from "@/lib/config";
-import { wagmiConfig } from "@/lib/wagmi";
+import { Bricolage_Grotesque, Geist_Mono, Hanken_Grotesk } from "next/font/google";
+import { siteDescription, siteTitle } from "@/lib/brand";
 import "./globals.css";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
+const bricolage = Bricolage_Grotesque({ variable: "--font-bricolage", subsets: ["latin"], axes: ["opsz"] });
+const hanken = Hanken_Grotesk({ variable: "--font-hanken", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
+// Absolute URLs for Open Graph images: the production domain on Vercel, localhost otherwise.
+const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : "http://localhost:3000";
+
 export const metadata: Metadata = {
-  title: { default: "Tap — programmable USDC allowances", template: "%s · Tap" },
-  description:
-    "Lock USDC in a vault and give family, freelancers or AI agents spending allowances with rules the contract enforces. Built on Arc.",
+  metadataBase: new URL(siteUrl),
+  title: { default: siteTitle, template: "%s · Tap" },
+  description: siteDescription,
+  openGraph: { type: "website", siteName: "Tap", title: siteTitle, description: siteDescription, url: "/" },
+  twitter: { card: "summary_large_image", title: siteTitle, description: siteDescription },
 };
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#16181c" },
-    { media: "(prefers-color-scheme: light)", color: "#fcfcfc" },
+    { media: "(prefers-color-scheme: dark)", color: "#0b2a2a" },
+    { media: "(prefers-color-scheme: light)", color: "#f6f9f7" },
   ],
 };
 
-export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const initialState = cookieToInitialState(wagmiConfig, (await headers()).get("cookie"));
+export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} flex min-h-dvh flex-col font-sans antialiased`}>
-        <Providers initialState={initialState}>
-          <SiteHeader />
-          <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-24 md:pb-12">
-            {tapAddress ? children : <NotConfigured />}
-          </main>
-          <footer className="hidden border-t py-6 text-center text-xs text-muted-foreground md:block">
-            Tap on {chain.name}
-            {tapAddress && (
-              <>
-                {" · "}
-                <span className="font-mono">{tapAddress}</span>
-              </>
-            )}
-          </footer>
-          <MobileNav />
-        </Providers>
+    // Font variables sit on <html> so theme variables declared on :root can resolve them.
+    <html
+      lang="en"
+      className={`${bricolage.variable} ${hanken.variable} ${geistMono.variable} dark`}
+      suppressHydrationWarning
+    >
+      <body className="flex min-h-dvh flex-col font-sans antialiased">
+        {children}
       </body>
     </html>
   );

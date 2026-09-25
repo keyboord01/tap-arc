@@ -11,7 +11,7 @@ async function openMenu(page: Page, name: string | RegExp) {
 
 test("disconnect returns to the connect screen and stays disconnected after reload", async ({ page }) => {
   await installWallet(page, ACCOUNTS.owner);
-  await page.goto("/");
+  await page.goto("/app");
   await connect(page);
   await expect(header(page).getByRole("button", { name: short(ACCOUNTS.owner) })).toBeVisible();
 
@@ -25,7 +25,7 @@ test("disconnect returns to the connect screen and stays disconnected after relo
 
 test("switch account follows the account picked in the wallet", async ({ page }) => {
   await installWallet(page, ACCOUNTS.owner, { accounts: [ACCOUNTS.owner, ACCOUNTS.spender] });
-  await page.goto("/");
+  await page.goto("/app");
   await connect(page);
   // Connecting opens the picker once, which lands on the spender; switch back to the owner first.
   const first = header(page).getByRole("button", { name: /^0x/ });
@@ -40,7 +40,7 @@ test("switch account follows the account picked in the wallet", async ({ page })
 
 test("change wallet disconnects and opens the wallet picker", async ({ page }) => {
   await installWallet(page, ACCOUNTS.owner);
-  await page.goto("/");
+  await page.goto("/app");
   await connect(page);
 
   await openMenu(page, short(ACCOUNTS.owner));
@@ -55,7 +55,7 @@ test("change wallet disconnects and opens the wallet picker", async ({ page }) =
 
 test("on the wrong network the menu offers switching network and disconnecting", async ({ page }) => {
   await installWallet(page, ACCOUNTS.owner);
-  await page.goto("/");
+  await page.goto("/app");
   await connect(page);
   await expect(header(page).getByRole("button", { name: short(ACCOUNTS.owner) })).toBeVisible();
   await page.evaluate(() => (window as unknown as { __walletSetChain: (id: number) => void }).__walletSetChain(1));

@@ -14,7 +14,7 @@ export function RequireWallet({ children, title, description }: { children: Reac
   if (status !== "connected") {
     return (
       <div className="mx-auto flex max-w-md flex-col items-center gap-4 py-16 text-center animate-in fade-in-0">
-        <div className="grid size-12 place-items-center rounded-full bg-primary/15 text-primary">
+        <div className="grid size-12 place-items-center rounded-full bg-primary/15 text-primary dark:text-mint">
           <WalletIcon className="size-6" />
         </div>
         <h2 className="text-xl font-semibold">{title}</h2>

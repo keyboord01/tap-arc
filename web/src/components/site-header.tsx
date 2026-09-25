@@ -5,19 +5,20 @@ import { usePathname } from "next/navigation";
 import { ActivityIcon, SendIcon, VaultIcon } from "lucide-react";
 
 import { ConnectButton } from "@/components/connect-button";
+import { LogoMark } from "@/components/landing/logo-mark";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Badge } from "@/components/ui/badge";
 import { network } from "@/lib/config";
 import { cn } from "@/lib/utils";
 
 export const navItems = [
-  { href: "/", label: "My vault", icon: VaultIcon },
-  { href: "/spend", label: "Spend", icon: SendIcon },
-  { href: "/activity", label: "Activity", icon: ActivityIcon },
+  { href: "/app", label: "My vault", icon: VaultIcon },
+  { href: "/app/spend", label: "Spend", icon: SendIcon },
+  { href: "/app/activity", label: "Activity", icon: ActivityIcon },
 ] as const;
 
 function isActive(pathname: string, href: string) {
-  return href === "/" ? pathname === "/" : pathname.startsWith(href);
+  return href === "/app" ? pathname === "/app" : pathname.startsWith(href);
 }
 
 export function SiteHeader() {
@@ -26,9 +27,9 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-14 max-w-5xl items-center gap-4 px-4">
-        <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
-          <span className="grid size-7 place-items-center rounded-md bg-primary font-bold text-primary-foreground">T</span>
-          Tap
+        <Link href="/app" className="flex items-center gap-2 font-semibold tracking-tight">
+          <LogoMark size={28} />
+          <span className="font-display text-lg font-bold tracking-[-0.02em]">Tap</span>
         </Link>
         {network !== "mainnet" && (
           <Badge variant="warning" className="hidden sm:inline-flex">
@@ -70,7 +71,7 @@ export function MobileNav() {
             href={href}
             className={cn(
               "flex flex-col items-center gap-1 py-2 text-xs transition-colors",
-              isActive(pathname, href) ? "text-primary" : "text-muted-foreground",
+              isActive(pathname, href) ? "text-primary dark:text-mint" : "text-muted-foreground",
             )}
           >
             <Icon className="size-5" />
