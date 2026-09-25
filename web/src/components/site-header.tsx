@@ -7,8 +7,7 @@ import { ActivityIcon, SendIcon, VaultIcon } from "lucide-react";
 import { ConnectButton } from "@/components/connect-button";
 import { LogoMark } from "@/components/landing/logo-mark";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Badge } from "@/components/ui/badge";
-import { network } from "@/lib/config";
+import { NetworkSwitch } from "@/components/network-switch";
 import { cn } from "@/lib/utils";
 
 export const navItems = [
@@ -31,11 +30,7 @@ export function SiteHeader() {
           <LogoMark size={28} />
           <span className="font-display text-lg font-bold tracking-[-0.02em]">Tap</span>
         </Link>
-        {network !== "mainnet" && (
-          <Badge variant="warning" className="hidden sm:inline-flex">
-            {network === "local" ? "Local" : "Testnet"}
-          </Badge>
-        )}
+        <NetworkSwitch />
         <nav className="ml-4 hidden items-center gap-1 md:flex">
           {navItems.map((item) => (
             <Link

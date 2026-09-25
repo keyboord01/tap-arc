@@ -9,8 +9,9 @@ It's built for the people and agents you pay regularly: family members, freelanc
 
 | | |
 | --- | --- |
-| **Live app** | [web-pearl-nine-23.vercel.app](https://web-pearl-nine-23.vercel.app) |
-| **Contract (Arc mainnet)** | _TBD: `0x…` ([explorer](https://explorer.arc.io))_ |
+| **Live app (Arc mainnet)** | [web-pearl-nine-23.vercel.app](https://web-pearl-nine-23.vercel.app) |
+| **Testnet app** | [tap-testnet-alpha.vercel.app](https://tap-testnet-alpha.vercel.app) (free test USDC from [faucet.circle.com](https://faucet.circle.com)) |
+| **Contract (Arc mainnet)** | [`0x5c3315d390038ff303065E9Af5328940d9A89bBb`](https://explorer.arc.io/address/0x5c3315d390038ff303065E9Af5328940d9A89bBb) (verified; deploy tx [`0x5329d2…53b5`](https://explorer.arc.io/tx/0x5329d20aaa7f56faf4cb18bb063a27d4565c3266874faf57f54c2f0436db53b5)) |
 | **Contract (Arc testnet)** | [`0xD9a0D10970D6c1877817D76C6a3bE701c6556C27`](https://explorer.testnet.arc.io/address/0xD9a0D10970D6c1877817D76C6a3bE701c6556C27) (verified) |
 
 ## What it does
@@ -195,6 +196,7 @@ pnpm e2e                                         # Playwright flows; needs anvil
 | `NEXT_PUBLIC_CHAIN` | web | `testnet` (default), `mainnet` or `local` |
 | `NEXT_PUBLIC_TAP_ADDRESS` | web | Deployed Tap address. Unset shows a "contract not configured" screen |
 | `NEXT_PUBLIC_TAP_DEPLOY_BLOCK` | web | Optional. Block the activity feed stops scanning at |
+| `NEXT_PUBLIC_MAINNET_URL`, `NEXT_PUBLIC_TESTNET_URL` | web | Optional. URLs of each network's deployment; the header's network switch links between them |
 | `NEXT_PUBLIC_ARC_MAINNET_RPC_URL` | web | Optional RPC override (default `https://rpc.mainnet.arc.io`) |
 | `NEXT_PUBLIC_ARC_TESTNET_RPC_URL` | web | Optional RPC override (default `https://rpc.testnet.arc.io`) |
 | `NEXT_PUBLIC_ARC_TESTNET_WS_URL` | web | Optional WebSocket override (default `wss://rpc.testnet.arc.io`) |
