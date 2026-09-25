@@ -70,7 +70,7 @@ export function MobileNav() {
             href={href}
             className={cn(
               "flex flex-col items-center gap-1 py-2 text-xs transition-colors",
-              isActive(pathname, href) ? "text-primary" : "text-muted-foreground",
+              isActive(pathname, href) ? "text-primary dark:text-mint" : "text-muted-foreground",
             )}
           >
             <Icon className="size-5" />

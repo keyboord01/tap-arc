@@ -50,7 +50,7 @@ export function Landing() {
       <section className="grid gap-4 sm:grid-cols-2">
         {features.map(({ icon: Icon, title, body }) => (
           <div key={title} className="space-y-2 rounded-xl border bg-card p-5">
-            <div className="grid size-9 place-items-center rounded-lg bg-primary/15 text-primary">
+            <div className="grid size-9 place-items-center rounded-lg bg-primary/15 text-primary dark:text-mint">
               <Icon className="size-4" />
             </div>
             <h2 className="font-medium">{title}</h2>

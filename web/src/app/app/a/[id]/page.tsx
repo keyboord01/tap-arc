@@ -81,7 +81,7 @@ export default function SharedAllowancePage() {
         <p className="text-sm text-muted-foreground">
           This allowance is from your vault. Send this page&apos;s link to {shortAddress(allowance.spender)} so they
           can spend from it, or{" "}
-          <Link href="/app" className="text-primary underline-offset-4 hover:underline">
+          <Link href="/app" className="text-primary underline-offset-4 hover:underline dark:text-mint">
             manage your vault
           </Link>
           .
