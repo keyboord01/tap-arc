@@ -1,0 +1,12 @@
+# Private research notes
+NOTES.internal.md
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
