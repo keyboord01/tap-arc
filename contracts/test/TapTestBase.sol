@@ -5,7 +5,6 @@ import {Test} from "forge-std/Test.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import {Tap} from "../src/Tap.sol";
-import {ITap} from "../src/interfaces/ITap.sol";
 import {MockUSDC} from "./mocks/MockUSDC.sol";
 
 abstract contract TapTestBase is Test {

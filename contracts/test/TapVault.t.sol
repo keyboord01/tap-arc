@@ -208,7 +208,7 @@ contract TapVaultTest is TapTestBase {
     function test_DirectTransfer_DoesNotChangeVaultBalances() public {
         _deposit(owner, 10 * USDC);
         vm.prank(owner);
-        usdc.transfer(address(tap), 500 * USDC);
+        assertTrue(usdc.transfer(address(tap), 500 * USDC));
 
         assertEq(usdc.balanceOf(address(tap)), 510 * USDC);
         assertEq(tap.vaultBalance(owner), 10 * USDC);
@@ -217,7 +217,7 @@ contract TapVaultTest is TapTestBase {
     function test_DirectTransfer_CannotBeWithdrawn() public {
         _deposit(owner, 10 * USDC);
         vm.prank(owner);
-        usdc.transfer(address(tap), 500 * USDC);
+        assertTrue(usdc.transfer(address(tap), 500 * USDC));
 
         vm.prank(owner);
         vm.expectRevert(abi.encodeWithSelector(ITap.InsufficientVaultBalance.selector, 10 * USDC, 11 * USDC));
@@ -233,7 +233,7 @@ contract TapVaultTest is TapTestBase {
         _deposit(owner, 5 * USDC);
         uint256 id = _createWeekly();
         vm.prank(owner);
-        usdc.transfer(address(tap), 500 * USDC);
+        assertTrue(usdc.transfer(address(tap), 500 * USDC));
 
         vm.prank(spender);
         vm.expectRevert(abi.encodeWithSelector(ITap.InsufficientVaultBalance.selector, 5 * USDC, 6 * USDC));

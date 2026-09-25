@@ -10,7 +10,7 @@ import {ReentrantToken} from "./mocks/ReentrantToken.sol";
 
 /// @notice Acts as both vault owner and spender, and tries to re-enter Tap from a token callback.
 contract Attacker {
-    Tap internal immutable tap;
+    Tap internal tap;
     uint256 public id;
 
     constructor(Tap tap_) {
