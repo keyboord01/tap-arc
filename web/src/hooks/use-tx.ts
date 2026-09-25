@@ -32,7 +32,7 @@ export type TxRequest<
 export type TxStep = { title: string; request: TxRequest };
 
 /** Type-checks a contract call against its ABI and packages it as a step for `run`. */
-export function txStep<abi extends Abi, fn extends ContractFunctionName<abi, "nonpayable">>(
+export function txStep<const abi extends Abi, const fn extends ContractFunctionName<abi, "nonpayable">>(
   title: string,
   request: TxRequest<abi, fn>,
 ): TxStep {
