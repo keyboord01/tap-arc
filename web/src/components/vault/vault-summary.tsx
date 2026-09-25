@@ -29,7 +29,7 @@ export function VaultSummary({
       <div className="grid gap-5 px-5 sm:grid-cols-[1fr_auto] sm:items-end">
         <div className="space-y-1">
           <p className="text-sm text-muted-foreground">Vault balance</p>
-          <p className="text-4xl font-semibold tracking-tight tabular-nums">
+          <p data-testid="vault-balance" className="text-4xl font-semibold tracking-tight tabular-nums">
             {formatUsdc(vaultBalance)} <span className="text-lg font-normal text-muted-foreground">USDC</span>
           </p>
           <p className="text-sm text-muted-foreground">
@@ -52,7 +52,7 @@ export function VaultSummary({
           <p className="font-medium tabular-nums">{formatUsdc(promised)} USDC</p>
         </div>
         <div>
-          <p className="text-muted-foreground">Live allowances</p>
+          <p className="text-muted-foreground">Active allowances</p>
           <p className="font-medium tabular-nums">{liveCount}</p>
         </div>
       </div>

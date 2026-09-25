@@ -67,7 +67,7 @@ export function AllowanceCard({
           </div>
           <p className="text-lg font-semibold tracking-tight">
             {formatUsdc(a.amountPerPeriod)} USDC{" "}
-            <span className="font-normal text-muted-foreground">{periodLabel(Number(a.periodLength))}</span>
+            <span className="whitespace-nowrap font-normal text-muted-foreground">{periodLabel(Number(a.periodLength))}</span>
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-1">
