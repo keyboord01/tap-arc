@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { ActivityIcon, SendIcon, VaultIcon } from "lucide-react";
 
 import { ConnectButton } from "@/components/connect-button";
+import { LogoMark } from "@/components/landing/logo-mark";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Badge } from "@/components/ui/badge";
 import { network } from "@/lib/config";
@@ -27,8 +28,8 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-14 max-w-5xl items-center gap-4 px-4">
         <Link href="/app" className="flex items-center gap-2 font-semibold tracking-tight">
-          <span className="grid size-7 place-items-center rounded-md bg-primary font-bold text-primary-foreground">T</span>
-          Tap
+          <LogoMark size={28} />
+          <span className="font-display text-lg font-bold tracking-[-0.02em]">Tap</span>
         </Link>
         {network !== "mainnet" && (
           <Badge variant="warning" className="hidden sm:inline-flex">
