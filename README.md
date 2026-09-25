@@ -9,9 +9,9 @@ It's built for the people and agents you pay regularly: family members, freelanc
 
 | | |
 | --- | --- |
-| **Live app** | _TBD: live URL_ |
+| **Live app** | [web-pearl-nine-23.vercel.app](https://web-pearl-nine-23.vercel.app) |
 | **Contract (Arc mainnet)** | _TBD: `0x…` ([explorer](https://explorer.arc.io))_ |
-| **Contract (Arc testnet)** | _TBD: `0x…` ([explorer](https://explorer.testnet.arc.io))_ |
+| **Contract (Arc testnet)** | [`0xD9a0D10970D6c1877817D76C6a3bE701c6556C27`](https://explorer.testnet.arc.io/address/0xD9a0D10970D6c1877817D76C6a3bE701c6556C27) (verified) |
 
 ## What it does
 
