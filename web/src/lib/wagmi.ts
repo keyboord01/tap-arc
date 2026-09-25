@@ -1,4 +1,4 @@
-import { createConfig, http } from "wagmi";
+import { cookieStorage, createConfig, createStorage, http } from "wagmi";
 import { injected } from "wagmi/connectors";
 import { chain } from "./config";
 
@@ -9,6 +9,8 @@ export const wagmiConfig = createConfig({
   // Arc blocks land every ~0.5s; poll quickly so receipts and reads feel instant.
   pollingInterval: 500,
   ssr: true,
+  // Cookies let the server render the connected state, so returning users don't see a flash.
+  storage: createStorage({ storage: cookieStorage }),
 });
 
 declare module "wagmi" {
