@@ -31,6 +31,16 @@ export const tapDeployBlock = (() => {
 export const usdcAddress: Address =
   network === "local" ? (parseAddress(process.env.NEXT_PUBLIC_USDC_ADDRESS) ?? ARC_USDC) : ARC_USDC;
 
+/** Where each network's deployment of the app lives, for the header's network switch. */
+function parseSiteUrl(value: string | undefined) {
+  const v = value?.trim().replace(/\/+$/, "");
+  return v && /^https?:\/\//.test(v) ? v : undefined;
+}
+export const networkSites = {
+  mainnet: parseSiteUrl(process.env.NEXT_PUBLIC_MAINNET_URL),
+  testnet: parseSiteUrl(process.env.NEXT_PUBLIC_TESTNET_URL),
+};
+
 export const explorerUrl = chain.blockExplorers?.default.url;
 
 export function txUrl(hash: string) {
