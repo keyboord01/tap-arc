@@ -87,6 +87,10 @@
 @keyframes prog{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 
 
+.reelwrap[data-paused="true"] * {
+  animation-play-state: paused !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reelwrap * {
     animation: none !important;

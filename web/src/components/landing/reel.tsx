@@ -1,6 +1,6 @@
 "use client";
 
-import { useId } from "react";
+import { useEffect, useId, useRef } from "react";
 
 import { cn } from "@/lib/utils";
 import s from "./reel.module.css";
@@ -26,9 +26,33 @@ export function Reel() {
   const uid = useId().replace(/[^a-zA-Z0-9_-]/g, "");
   const dotsId = `${uid}-dots`;
   const clipId = `${uid}-vaultClip`;
+  const root = useRef<HTMLDivElement>(null);
+
+  // Pause every animation together while the reel is off screen or the tab is hidden,
+  // so it doesn't burn CPU. Pausing all of them at once keeps the shared clock in sync.
+  useEffect(() => {
+    const el = root.current;
+    if (!el) return;
+    let visible = true;
+    const update = () => {
+      el.dataset.paused = String(!visible || document.hidden);
+    };
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      update();
+    });
+    observer.observe(el);
+    document.addEventListener("visibilitychange", update);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", update);
+    };
+  }, []);
 
   return (
-    <div className={cn(s.reelwrap, "flex w-full min-w-0 flex-col gap-[18px] min-[1100px]:w-[740px] min-[1440px]:shrink-0")}>
+    <div
+      ref={root}
+      className={cn(s.reelwrap, "flex w-full min-w-0 flex-col gap-[18px] min-[1100px]:w-[740px] min-[1440px]:shrink-0")}>
       <div className="w-full overflow-hidden rounded-[clamp(18px,1.9445vw,28px)] border border-track bg-panel min-[1440px]:box-content min-[1440px]:h-[620px] min-[1440px]:w-[740px]">
         <svg
           className={cn(s.reel, "block h-auto w-full")}

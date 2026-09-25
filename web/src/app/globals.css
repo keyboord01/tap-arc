@@ -143,6 +143,13 @@
   line-height: normal;
 }
 
+/* Landing page: anchor links glide to #how, #who and #why, and jump instantly under reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  :root:has(.landing) {
+    scroll-behavior: smooth;
+  }
+}
+
 /* Landing page: visible focus ring on every link and button. */
 .landing a:focus-visible,
 .landing button:focus-visible {
