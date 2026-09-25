@@ -28,6 +28,19 @@ It's built for the people and agents you pay regularly: family members, freelanc
 - **Plain-language errors.** Custom contract errors (limit reached, vault short, paused, expired, revoked,
   blocklisted recipient…) are decoded into clear messages, usually before the wallet even opens.
 
+### Pages
+
+| Route | What's there |
+| --- | --- |
+| `/` | Landing page: what Tap is, a 15-second animated walkthrough, use cases, why Arc |
+| `/app` | **My vault**: deposit, withdraw, create and manage allowances |
+| `/app/spend` | **Spend**: allowances granted to the connected wallet |
+| `/app/activity` | Live activity feed from contract events |
+| `/app/a/[id]` | Share link for one allowance (the spender's view) |
+
+The app's old paths (`/spend`, `/activity`, `/a/[id]`) redirect to their `/app` equivalents, so share links
+made before the landing page existed keep working.
+
 ### How Tap differs
 
 Existing agent-wallet guardrails give one agent wallet per vault with a recipient allowlist and daily caps.
@@ -53,6 +66,10 @@ contracts/              Foundry project
   script/DeployLocal.s.sol  Anvil only: mock USDC + Tap + test funds
 
 web/                    Next.js 16 (App Router), React 19, Tailwind v4, shadcn/ui, wagmi 3, viem 2
+  src/app/page.tsx      Landing page (static; no wallet code loads here)
+  src/app/app/          The app: vault, spend, activity and share pages under /app
+  src/components/landing/  Landing sections; reel.tsx + reel.module.css hold the CSS-only motion reel
+  src/app/globals.css   Tap palette as Tailwind theme tokens, shared by the landing page and the app
   src/lib/chains.ts     Arc mainnet/testnet (URLs overridable via env) and local anvil
   src/lib/allowance.ts  Client mirror of the contract's period math (countdowns update at rollover)
   src/lib/errors.ts     Custom error → plain message decoding
@@ -150,6 +167,9 @@ NEXT_PUBLIC_USDC_ADDRESS=0x5FbDB2315678afecb367f032d93F642f64180aa3
 ENV
 pnpm dev
 ```
+
+Open [localhost:3000](http://localhost:3000) for the landing page and
+[localhost:3000/app](http://localhost:3000/app) for the app.
 
 Add the anvil network (chain ID 31337, RPC `http://127.0.0.1:8545`) to your browser wallet and import one of
 anvil's dev accounts to try it.
