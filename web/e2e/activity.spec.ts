@@ -17,7 +17,7 @@ test("the feed shows the viewer's history and updates live", async ({ page }) =>
   await seedAllowance();
   const id = await allowanceCount();
   await installWallet(page, ACCOUNTS.spender);
-  await page.goto("/activity");
+  await page.goto("/app/activity");
   await connect(page);
 
   await expect(page.getByText(`0xf39F…2266 gave you 20.00 USDC every 7 days (allowance #${id})`)).toBeVisible();
@@ -36,6 +36,6 @@ test("the feed shows the viewer's history and updates live", async ({ page }) =>
 
 test("without a wallet, all recent contract activity is shown", async ({ page }) => {
   await seedAllowance();
-  await page.goto("/activity");
+  await page.goto("/app/activity");
   await expect(page.getByText("0xf39F…2266 deposited 100.00 USDC")).toBeVisible();
 });

@@ -14,7 +14,7 @@ test.afterEach(async () => {
 test("spender sees granted allowances and spends within the limit", async ({ page }) => {
   await seedAllowance();
   await installWallet(page, ACCOUNTS.spender);
-  await page.goto("/spend");
+  await page.goto("/app/spend");
   await connect(page);
 
   const card = page.locator("[data-slot=card]").filter({ hasText: "every 7 days" });
@@ -39,7 +39,7 @@ test("a blocklisted recipient shows a plain error", async ({ page }) => {
   await seedAllowance();
   await setBlocked(ACCOUNTS.recipient);
   await installWallet(page, ACCOUNTS.spender);
-  await page.goto("/spend");
+  await page.goto("/app/spend");
   await connect(page);
 
   await page.getByRole("button", { name: "Spend" }).click();
@@ -56,7 +56,7 @@ test("a paused allowance can't be spent", async ({ page }) => {
   await seedAllowance();
   await pauseAllowance(await allowanceCount());
   await installWallet(page, ACCOUNTS.spender);
-  await page.goto("/spend");
+  await page.goto("/app/spend");
   await connect(page);
 
   const card = page.locator("[data-slot=card]").filter({ hasText: "every 7 days" });
@@ -66,7 +66,7 @@ test("a paused allowance can't be spent", async ({ page }) => {
 
 test("a wallet with no allowances sees an empty state", async ({ page }) => {
   await installWallet(page, ACCOUNTS.recipient);
-  await page.goto("/spend");
+  await page.goto("/app/spend");
   await connect(page);
   await expect(page.getByText("No allowances for this wallet")).toBeVisible();
 });
