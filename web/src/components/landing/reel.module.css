@@ -74,7 +74,9 @@
 .resetcap{opacity:0;animation:resetcap 15s ease infinite}
 @keyframes resetcap{0%,90%{opacity:0;transform:translateY(8px)}92%{opacity:1;transform:translateY(0)}100%{opacity:1;transform:translateY(0)}}
 
-.cap{position:absolute;left:0;top:0;opacity:0;animation:cap 15s cubic-bezier(.2,.8,.2,1) infinite}
+/* Captions stack in one grid cell so the row grows when a caption wraps on narrow screens. */
+.caps{display:grid}
+.cap{grid-area:1/1;opacity:0;animation:cap 15s cubic-bezier(.2,.8,.2,1) infinite}
 .cap0{opacity:1;animation-delay:0s}.cap1{animation-delay:-12s}.cap2{animation-delay:-9s}.cap3{animation-delay:-6s}.cap4{animation-delay:-3s}
 @keyframes cap{0%{opacity:0;transform:translateY(24px);filter:blur(6px)}2.5%{opacity:1;transform:translateY(0);filter:blur(0)}17.5%{opacity:1;transform:translateY(0);filter:blur(0)}20%{opacity:0;transform:translateY(-24px);filter:blur(6px)}100%{opacity:0;transform:translateY(-24px);filter:blur(6px)}}
 

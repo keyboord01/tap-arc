@@ -1,3 +1,6 @@
+import { container, sectionHeading } from "./layout";
+import { cn } from "@/lib/utils";
+
 const reasons = [
   {
     title: "USDC pays the gas",
@@ -16,20 +19,20 @@ const reasons = [
 export function WhyArc() {
   return (
     <section id="why" className="bg-mist">
-      <div className="mx-auto grid max-w-[1440px] grid-cols-[480px_minmax(0,1fr)] gap-24 px-[96px] py-[128px]">
+      <div className={cn(container, "grid grid-cols-1 gap-12 py-[clamp(72px,8.8889vw,128px)] min-[1100px]:grid-cols-[480px_minmax(0,1fr)] min-[1100px]:gap-[clamp(48px,6.6667vw,96px)]")}>
         <div className="flex flex-col gap-[18px]">
-          <h2 className="m-0 font-display text-[52px] leading-[1.05] font-bold tracking-[-0.03em] text-ink tabular-nums">
+          <h2 className={sectionHeading}>
             Why it runs on Arc
           </h2>
-          <p className="m-0 text-[19px] leading-[1.55] text-body">
+          <p className="m-0 text-[clamp(17px,1.3195vw,19px)] leading-[1.55] text-body">
             An allowance only works if spending it is instant and cheap. Arc makes both the default.
           </p>
         </div>
         <div className="flex flex-col gap-10">
           {reasons.map((r) => (
             <div key={r.title} className="flex flex-col gap-2">
-              <h3 className="m-0 text-[24px] font-semibold text-ink">{r.title}</h3>
-              <p className="m-0 max-w-[560px] text-[18px] leading-[1.55] text-body">{r.text}</p>
+              <h3 className="m-0 text-[clamp(21px,1.6667vw,24px)] font-semibold text-ink">{r.title}</h3>
+              <p className="m-0 max-w-[560px] text-[clamp(16px,1.25vw,18px)] leading-[1.55] text-body">{r.text}</p>
             </div>
           ))}
         </div>

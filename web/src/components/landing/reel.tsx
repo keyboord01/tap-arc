@@ -28,10 +28,10 @@ export function Reel() {
   const clipId = `${uid}-vaultClip`;
 
   return (
-    <div className={cn(s.reelwrap, "flex w-[740px] flex-col gap-[18px]")}>
-      <div className="box-content h-[620px] w-[740px] overflow-hidden rounded-[28px] border border-track bg-panel">
+    <div className={cn(s.reelwrap, "flex w-full min-w-0 flex-col gap-[18px] min-[1100px]:w-[740px] min-[1440px]:shrink-0")}>
+      <div className="w-full overflow-hidden rounded-[clamp(18px,1.9445vw,28px)] border border-track bg-panel min-[1440px]:box-content min-[1440px]:h-[620px] min-[1440px]:w-[740px]">
         <svg
-          className={s.reel}
+          className={cn(s.reel, "block h-auto w-full")}
           width="740"
           height="620"
           viewBox="-10 0 740 620"
@@ -178,14 +178,14 @@ export function Reel() {
         </svg>
       </div>
 
-      <div className="relative h-[56px] overflow-hidden" aria-hidden="true">
+      <div className={cn(s.caps, "min-h-[56px] overflow-hidden")} aria-hidden="true">
         {captions.map((text, i) => (
           <div
             key={text}
             className={cn(
               s.cap,
               capClass[i],
-              "font-display text-[38px] font-semibold tracking-[-0.02em] whitespace-nowrap text-paper tabular-nums",
+              "font-display text-[clamp(22px,2.6389vw,38px)] font-semibold tracking-[-0.02em] text-paper tabular-nums min-[1440px]:whitespace-nowrap",
             )}
           >
             {text}
@@ -197,7 +197,7 @@ export function Reel() {
         <div className="relative h-[3px] overflow-hidden rounded-[2px] bg-track">
           <div className={cn(s.prog, "absolute top-0 left-0 h-[3px] w-full bg-mint")} />
         </div>
-        <div className="grid grid-cols-5 gap-2 text-[14px] font-semibold">
+        <div className="grid grid-cols-5 gap-2 text-[clamp(12px,0.9723vw,14px)] font-semibold">
           {chapters.map((label, i) => (
             <span key={label} className={cn(s.chap, chapClass[i])}>
               {label}
