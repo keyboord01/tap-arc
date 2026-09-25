@@ -6,6 +6,7 @@ import { useAccount } from "wagmi";
 
 import { AllowanceCard } from "@/components/allowance-card";
 import { RequireWallet } from "@/components/connect-prompt";
+import { Landing } from "@/components/landing";
 import { EmptyState, ErrorNote, Loading } from "@/components/status";
 import { Button } from "@/components/ui/button";
 import { AllowanceFormDialog } from "@/components/vault/allowance-form-dialog";
@@ -17,6 +18,8 @@ import { allowanceStatus, isLive } from "@/lib/allowance";
 import { describeError } from "@/lib/errors";
 
 export default function VaultPage() {
+  const { status } = useAccount();
+  if (status === "disconnected") return <Landing />;
   return (
     <div className="space-y-6">
       <div className="space-y-1">
