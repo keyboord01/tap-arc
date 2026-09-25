@@ -1,6 +1,6 @@
 import { SettingsIcon } from "lucide-react";
 
-import { chain } from "@/lib/config";
+import { chain, tapAddressInvalid } from "@/lib/config";
 
 export function NotConfigured() {
   return (
@@ -10,9 +10,21 @@ export function NotConfigured() {
       </div>
       <h1 className="text-xl font-semibold">Contract not configured</h1>
       <p className="text-sm text-muted-foreground">
-        This deployment doesn&apos;t know where the Tap contract lives on {chain.name}. Set{" "}
-        <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">NEXT_PUBLIC_TAP_ADDRESS</code> to the
-        deployed contract address and rebuild.
+        {tapAddressInvalid ? (
+          <>
+            <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">NEXT_PUBLIC_TAP_ADDRESS</code> is set, but
+            it isn&apos;t a valid address. It should be 0x followed by 40 hex characters.
+          </>
+        ) : (
+          <>
+            This deployment doesn&apos;t know where the Tap contract lives on {chain.name}. Set{" "}
+            <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">NEXT_PUBLIC_TAP_ADDRESS</code> to the
+            deployed contract address.
+          </>
+        )}
+      </p>
+      <p className="text-sm text-muted-foreground">
+        Environment variables are read at build time, so redeploy after changing them.
       </p>
     </div>
   );
