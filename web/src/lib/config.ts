@@ -21,6 +21,12 @@ export const tapAddress = parseAddress(process.env.NEXT_PUBLIC_TAP_ADDRESS);
 /** Set but unusable, so the not-configured screen can say what's wrong. */
 export const tapAddressInvalid = !tapAddress && !!process.env.NEXT_PUBLIC_TAP_ADDRESS?.trim();
 
+/** Block the contract was deployed in; the activity feed never scans below it. */
+export const tapDeployBlock = (() => {
+  const raw = process.env.NEXT_PUBLIC_TAP_DEPLOY_BLOCK?.trim();
+  return raw && /^\d+$/.test(raw) ? BigInt(raw) : 0n;
+})();
+
 /** USDC is fixed on Arc; only a local chain may point at a mock token. */
 export const usdcAddress: Address =
   network === "local" ? (parseAddress(process.env.NEXT_PUBLIC_USDC_ADDRESS) ?? ARC_USDC) : ARC_USDC;
