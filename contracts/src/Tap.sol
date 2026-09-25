@@ -92,6 +92,33 @@ contract Tap is ITap, ReentrancyGuardTransient {
         emit AllowanceCreated(id, msg.sender, spender, amountPerPeriod, periodLength, start, expiry);
     }
 
+    /// @notice Change an allowance's limit, period length and expiry. The spender cannot be
+    ///         changed; grant a new allowance instead.
+    /// @dev Lowering the limit below what was spent this period leaves 0 remaining.
+    ///      Changing `periodLength` starts a fresh period (nothing spent) from now, or from
+    ///      `start` if the allowance has not started yet.
+    function editAllowance(uint256 id, uint256 amountPerPeriod, uint64 periodLength, uint64 expiry)
+        external
+        nonReentrant
+    {
+        Allowance storage a = _ownedLive(id);
+        _checkTerms(amountPerPeriod, periodLength);
+
+        uint64 start = a.start;
+        if (periodLength != a.periodLength) {
+            if (start < block.timestamp) start = uint64(block.timestamp);
+            a.start = start;
+            a.periodLength = periodLength;
+            a.periodIndex = 0;
+            a.spentThisPeriod = 0;
+        }
+        _checkExpiry(start, expiry);
+        a.amountPerPeriod = amountPerPeriod;
+        a.expiry = expiry;
+
+        emit AllowanceEdited(id, amountPerPeriod, periodLength, start, expiry);
+    }
+
     /// @notice Stop spending on an allowance until it is unpaused. Periods keep rolling.
     function pause(uint256 id) external nonReentrant {
         Allowance storage a = _ownedLive(id);
