@@ -137,3 +137,16 @@
     cursor: pointer;
   }
 }
+
+/* Landing page: the design leaves unstyled text at the browser's default line height. */
+.landing {
+  line-height: normal;
+}
+
+/* Landing page: visible focus ring on every link and button. */
+.landing a:focus-visible,
+.landing button:focus-visible {
+  outline: 3px solid var(--color-mint);
+  outline-offset: 3px;
+  border-radius: 12px;
+}

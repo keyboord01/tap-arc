@@ -1,5 +1,24 @@
-import { redirect } from "next/navigation";
+import { Cta } from "@/components/landing/cta";
+import { Footer } from "@/components/landing/footer";
+import { Hero } from "@/components/landing/hero";
+import { HowItWorks } from "@/components/landing/how-it-works";
+import { UseCases } from "@/components/landing/use-cases";
+import { WhyArc } from "@/components/landing/why-arc";
+import { addressUrl, network, tapAddress } from "@/lib/config";
+import { CONTRACT_SOURCE_URL } from "@/lib/links";
 
-export default function Home() {
-  redirect("/app");
+const networkLabel = network === "mainnet" ? "Arc mainnet" : network === "testnet" ? "Arc testnet" : "a local chain";
+
+export default function Landing() {
+  const explorerHref = tapAddress ? addressUrl(tapAddress) : undefined;
+  return (
+    <div className="landing bg-ink font-sans text-ink antialiased">
+      <Hero contractUrl={explorerHref ?? CONTRACT_SOURCE_URL} reel={<div className="w-[740px]" />} />
+      <HowItWorks />
+      <UseCases />
+      <WhyArc />
+      <Cta address={tapAddress} explorerHref={explorerHref} networkLabel={networkLabel} />
+      <Footer />
+    </div>
+  );
 }
