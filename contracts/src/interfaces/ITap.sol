@@ -97,7 +97,10 @@ interface ITap {
     function allowanceCount() external view returns (uint256);
     function allowancesByOwner(address owner) external view returns (uint256[] memory);
     function allowancesBySpender(address spender) external view returns (uint256[] memory);
-    function currentPeriod(uint256 id) external view returns (uint64 index, uint64 periodStart, uint64 periodEnd);
+    function currentPeriod(uint256 id)
+        external
+        view
+        returns (uint64 index, uint64 periodStart, uint64 periodEnd);
     function remaining(uint256 id) external view returns (uint256);
     function spendable(uint256 id) external view returns (uint256);
 }

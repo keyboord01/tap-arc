@@ -115,7 +115,9 @@ contract TapVaultTest is TapTestBase {
     function test_Withdraw_RevertsAboveBalance() public {
         _deposit(owner, 10 * USDC);
         vm.prank(owner);
-        vm.expectRevert(abi.encodeWithSelector(ITap.InsufficientVaultBalance.selector, 10 * USDC, 10 * USDC + 1));
+        vm.expectRevert(
+            abi.encodeWithSelector(ITap.InsufficientVaultBalance.selector, 10 * USDC, 10 * USDC + 1)
+        );
         tap.withdraw(10 * USDC + 1);
     }
 

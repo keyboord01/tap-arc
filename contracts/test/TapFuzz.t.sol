@@ -57,9 +57,12 @@ contract TapFuzzTest is TapTestBase {
 
     /// @dev Random spends at random (possibly repeated) timestamps never exceed the per-period limit
     ///      and succeed exactly when a reference model says they should.
-    function testFuzz_SpendMatchesModel(uint256 limit, uint64 period, uint256[12] memory amounts, uint64[12] memory gaps)
-        public
-    {
+    function testFuzz_SpendMatchesModel(
+        uint256 limit,
+        uint64 period,
+        uint256[12] memory amounts,
+        uint64[12] memory gaps
+    ) public {
         limit = bound(limit, 1, 10_000 * USDC);
         period = uint64(bound(period, 1, 30 days));
         uint256 id = _create(limit, period, 0);
