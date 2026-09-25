@@ -21,8 +21,13 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
-      <body className={`${bricolage.variable} ${hanken.variable} ${geistMono.variable} flex min-h-dvh flex-col font-sans antialiased`}>
+    // Font variables sit on <html> so theme variables declared on :root can resolve them.
+    <html
+      lang="en"
+      className={`${bricolage.variable} ${hanken.variable} ${geistMono.variable} dark`}
+      suppressHydrationWarning
+    >
+      <body className="flex min-h-dvh flex-col font-sans antialiased">
         {children}
       </body>
     </html>
