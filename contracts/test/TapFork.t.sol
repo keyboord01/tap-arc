@@ -8,13 +8,13 @@ import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IER
 import {Tap} from "../src/Tap.sol";
 
 /// @notice End-to-end check against real USDC on an Arc testnet fork.
-/// @dev Skipped unless ARC_TESTNET_RPC_URL is set, so offline runs stay green.
+/// @dev Skipped unless ARC_TESTNET_RPC is set, so offline runs stay green.
 contract TapForkTest is Test {
     address internal constant ARC_USDC = 0x3600000000000000000000000000000000000000;
     uint256 internal constant ARC_TESTNET_CHAIN_ID = 5042002;
 
     function test_Fork_EndToEndWithRealUsdc() public {
-        string memory rpc = vm.envOr("ARC_TESTNET_RPC_URL", string(""));
+        string memory rpc = vm.envOr("ARC_TESTNET_RPC", string(""));
         if (bytes(rpc).length == 0) {
             vm.skip(true);
             return;
