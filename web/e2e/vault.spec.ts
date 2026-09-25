@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { ACCOUNTS, connect, installWallet, revert, sentFees, snapshot } from "./wallet";
+import { ACCOUNTS, connect, installWallet, revert, sentFees, settle, snapshot } from "./wallet";
 
 let snap: string;
 test.beforeEach(async () => {
@@ -38,6 +38,7 @@ test("owner deposits, creates, edits, pauses and revokes an allowance", async ({
   await expect(card.getByText(/resets in 6d 23h/)).toBeVisible();
 
   // Promise more than the vault holds -> overcommitment warning.
+  await settle(page);
   await card.getByRole("button", { name: "Allowance actions" }).click();
   await page.getByRole("menuitem", { name: "Edit" }).click();
   await page.getByLabel("Limit per period").fill("150");
@@ -49,21 +50,25 @@ test("owner deposits, creates, edits, pauses and revokes an allowance", async ({
 
   // Pause and resume.
   const edited = page.locator("[data-slot=card]").filter({ hasText: "every 30 days" });
+  await settle(page);
   await edited.getByRole("button", { name: "Allowance actions" }).click();
   await page.getByRole("menuitem", { name: "Pause" }).click();
   await expect(edited.getByText("Paused", { exact: true })).toBeVisible();
   await expect(page.getByText("Your allowances promise more than your vault holds.")).toBeHidden();
+  await settle(page);
   await edited.getByRole("button", { name: "Allowance actions" }).click();
   await page.getByRole("menuitem", { name: "Resume" }).click();
   await expect(edited.getByText("Active", { exact: true })).toBeVisible();
 
   // Revoke, with confirmation.
+  await settle(page);
   await edited.getByRole("button", { name: "Allowance actions" }).click();
   await page.getByRole("menuitem", { name: "Revoke" }).click();
   await page.getByRole("dialog").getByRole("button", { name: "Revoke" }).click();
   await expect(page.getByRole("button", { name: /Show 1 ended allowance/ })).toBeVisible();
 
   // Withdraw.
+  await settle(page);
   await page.getByRole("button", { name: "Withdraw" }).click();
   await page.getByLabel("Amount").fill("40");
   await page.getByRole("dialog").getByRole("button", { name: "Withdraw" }).click();

@@ -88,3 +88,23 @@ export async function sentFees(page: Page) {
     ),
   );
 }
+
+/** Send a transaction from an unlocked anvil account, to set up chain state for a test. */
+export async function sendAs(from: string, to: string, data: string) {
+  const hash = await rpc<string>("eth_sendTransaction", [{ from, to, data }]);
+  for (let i = 0; i < 50; i++) {
+    const receipt = await rpc<{ status: string } | null>("eth_getTransactionReceipt", [hash]);
+    if (receipt) {
+      if (receipt.status !== "0x1") throw new Error(`setup transaction reverted: ${hash}`);
+      return;
+    }
+    await new Promise((r) => setTimeout(r, 100));
+  }
+  throw new Error("setup transaction not mined");
+}
+
+/** Wait for transaction toasts to clear so they don't cover the next click. */
+export async function settle(page: Page) {
+  await page.mouse.move(0, 0);
+  await page.locator("[data-sonner-toast]").first().waitFor({ state: "detached", timeout: 15_000 }).catch(() => {});
+}
