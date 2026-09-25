@@ -13,7 +13,7 @@ test.afterEach(async () => {
 test("owner deposits, creates, edits, pauses and revokes an allowance", async ({ page }) => {
   await installWallet(page, ACCOUNTS.owner);
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Connect to open your vault" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Spending allowances for USDC/ })).toBeVisible();
   await connect(page);
 
   // Empty vault.
