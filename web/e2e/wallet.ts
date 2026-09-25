@@ -1,6 +1,6 @@
 import type { Page } from "@playwright/test";
 
-export const RPC = "http://127.0.0.1:8545";
+export const RPC = process.env.E2E_RPC_URL ?? "http://127.0.0.1:8545";
 
 /** anvil's default accounts. anvil keeps them unlocked, so no keys are involved. */
 export const ACCOUNTS = {
